@@ -1,0 +1,27 @@
+{
+  "name": "fullstackopen-part3",
+  "version": "1.0.0",
+  "description": "Full Stack Open - Part 3",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StevenWuzz/FullStackOpen-Part3.git"
+  },
+  "author": "Steven Hans Limantoro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/StevenWuzz/FullStackOpen-Part3/issues"
+  },
+  "homepage": "https://github.com/StevenWuzz/FullStackOpen-Part3#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
