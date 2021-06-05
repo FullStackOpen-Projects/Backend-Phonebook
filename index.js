@@ -1,4 +1,5 @@
 const express = require('express')
+const crypto = require('crypto')
 const app = express()
 
 app.use(express.json())
@@ -47,8 +48,25 @@ app.get('/api/persons/:id', (request, response) => {
         response.json(person)
     }
     else{
-        response.status(404).end
+        response.status(404).end()
     }
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    persons = persons.filter(person => person.id !== id)
+    response.status(204).end()
+})
+
+app.post('/api/persons', (request,response) => {
+    const id = crypto.randomBytes(16).toString("hex");
+    const newPerson = {
+        name: request.body.name,
+        number: request.body.number,
+        id: id
+    }
+    persons = persons.concat(newPerson)
+    response.json(newPerson)
 })
 
 const PORT = 3001
