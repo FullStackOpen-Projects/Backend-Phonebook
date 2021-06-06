@@ -1,11 +1,12 @@
 const express = require('express')
 const crypto = require('crypto')
-const morgan = require('morgan')
+//const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
 const cors = require('cors')
 const app = express()
 
+app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
 
