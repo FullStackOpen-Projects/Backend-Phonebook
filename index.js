@@ -3,12 +3,13 @@ const crypto = require('crypto')
 const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
+const cors = require('cors')
 const app = express()
 
-
+app.use(cors())
 app.use(express.json())
 
-let persons = [
+let contacts = [
     { 
         "name": "Arto Hellas", 
         "number": "040-123456",
@@ -31,38 +32,38 @@ let persons = [
     }
 ]
 
-app.get('/api/persons', (request, response) => {
-    response.json(persons)
+app.get('/api/contacts', (request, response) => {
+    response.json(contacts)
 })
 
 app.get('/info', (request,response) => {
     const date = new Date()
     console.log(date)
     response.send(
-        `<p> Phonebook has info for ${persons.length} people </p>
+        `<p> Phonebook has info for ${contacs.length} people </p>
          <p> ${date} </p>`
     )
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/contacts/:id', (request, response) => {
     const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
+    const contact = contacts.find(contact => contact.id === id)
     
-    if(person){
-        response.json(person)
+    if(contact){
+        response.json(contact)
     }
     else{
         response.status(404).end()
     }
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/contacts/:id', (request, response) => {
     const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)
+    contacts = contacts.filter(person => person.id !== id)
     response.status(204).end()
 })
 
-app.post('/api/persons', (request,response) => {
+app.post('/api/contacts', (request,response) => {
     if(!(request.body.name)){
         return response.status(400).json({error: 'Name is missing'})
     }
@@ -73,27 +74,29 @@ app.post('/api/persons', (request,response) => {
         return response.status(400).json({error: 'Name and number are missing'})
     }
     else{
-        const duplicate = persons.some(person => person.name === request.body.name)
+        const duplicate = contacts.some(contact => contact.name === request.body.name)
         if(duplicate){
             return response.status(400).json({error: 'Name already exists '})
         }
     }
 
     const id = crypto.randomBytes(16).toString("hex");
-    const newPerson = {
+    const newContact = {
         name: request.body.name,
         number: request.body.number,
         id: id
     }
-    persons = persons.concat(newPerson)
-    response.json(newPerson)
+    contacts = contacts.concat(newContact)
+    response.json(newContact)
 })
 
+/*
 var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
 app.use(morgan('tiny', {stream: accessLogStream}))
 app.get('/', (request, response) => {
     response.send('Hello World')
 })
+*/
 
 const PORT = 3001
 app.listen(PORT, () => {

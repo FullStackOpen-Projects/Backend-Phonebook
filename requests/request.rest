@@ -1,12 +1,12 @@
-DELETE http://localhost:3001/api/persons/2
+DELETE http://localhost:3001/api/contacts/2
 ###
-GET http://localhost:3001/api/persons/
+GET http://localhost:3001/api/contacts/
 ###
-POST http://localhost:3001/api/persons
+POST http://localhost:3001/api/contacts
 content-type: application/json
 
 {
-    "name": "Ada Lovelace", 
+    "name": "Adi Lovelace", 
     "number": "39-44-5323523"
 }
 ###
