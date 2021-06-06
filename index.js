@@ -59,6 +59,22 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons', (request,response) => {
+    if(!(request.body.name)){
+        return response.status(400).json({error: 'Name is missing'})
+    }
+    else if(!(request.body.number)){
+        return response.status(400).json({error: 'Number is missing'})
+    }
+    else if(!(request.body.name) && !(request.body.number)){
+        return response.status(400).json({error: 'Name and number are missing'})
+    }
+    else{
+        const duplicate = persons.some(person => person.name === request.body.name)
+        if(duplicate){
+            return response.status(400).json({error: 'Name already exists '})
+        }
+    }
+
     const id = crypto.randomBytes(16).toString("hex");
     const newPerson = {
         name: request.body.name,
