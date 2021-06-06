@@ -1,6 +1,10 @@
 const express = require('express')
 const crypto = require('crypto')
+const morgan = require('morgan')
+const fs = require('fs')
+const path = require('path')
 const app = express()
+
 
 app.use(express.json())
 
@@ -83,6 +87,12 @@ app.post('/api/persons', (request,response) => {
     }
     persons = persons.concat(newPerson)
     response.json(newPerson)
+})
+
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
+app.use(morgan('tiny', {stream: accessLogStream}))
+app.get('/', (request, response) => {
+    response.send('Hello World')
 })
 
 const PORT = 3001
