@@ -6,7 +6,7 @@
   "scripts": {
     "build:ui": "rm -rf build && cd ~/FullStackOpen/phonebook/ && npm run build --prod && cp -r build ~/FullStackOpen-Phonebook-Backend",
     "deploy": "git push heroku main",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",    
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
     "logs:prod": "heroku logs --tail",
     "start": "node index.js",
     "dev": "nodemon index.js",
@@ -26,6 +26,7 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "express": "^4.17.1",
+    "mongoose": "^5.12.13",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
