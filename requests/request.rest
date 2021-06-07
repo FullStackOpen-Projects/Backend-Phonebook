@@ -1,4 +1,4 @@
-DELETE http://localhost:3001/api/contacts/2
+DELETE http://localhost:3001/api/contacts/4424a5d0c91346006b85d8eee3d67a88
 ###
 GET http://localhost:3001/api/contacts/
 ###
