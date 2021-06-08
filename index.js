@@ -33,20 +33,8 @@ let contacts = [
     }
 ]
 
-/*
-app.get('/api/contacts', (request, response) => {
-    response.json(contacts)
-})
-*/
 app.get('/api/contacts', (request, response) => {
     Contact.find({}).then(contacts => response.json(contacts))
-    /*
-    Contact.find({}).then(result => {
-        result.forEach(contact => {
-            console.log(`${contact.name} ${contact.number}`)
-        })
-    })
-    */
 })
 
 app.get('/info', (request,response) => {
@@ -78,6 +66,7 @@ app.delete('/api/contacts/:id', (request, response) => {
     response.status(204).end()
 })
 
+
 app.post('/api/contacts', (request,response) => {
     if(!(request.body.name)){
         return response.status(400).json({error: 'Name is missing'})
@@ -96,14 +85,18 @@ app.post('/api/contacts', (request,response) => {
     }
 
     const id = crypto.randomBytes(16).toString("hex");
-    const newContact = {
+
+    const newContact = new Contact({
         name: request.body.name,
         number: request.body.number,
         id: id
-    }
-    contacts = contacts.concat(newContact)
-    response.json(newContact)
+    })
+
+    newContact.save().then(savedContacts => {
+        response.json(savedContacts)
+    })
 })
+
 
 /*
 var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
