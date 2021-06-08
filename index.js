@@ -1,10 +1,10 @@
 const express = require('express')
 const crypto = require('crypto')
-//const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
 const cors = require('cors')
 const app = express()
+const Contact = require('./models/contact')
 
 app.use(express.static('build'))
 app.use(cors())
@@ -33,8 +33,20 @@ let contacts = [
     }
 ]
 
+/*
 app.get('/api/contacts', (request, response) => {
     response.json(contacts)
+})
+*/
+app.get('/api/contacts', (request, response) => {
+    Contact.find({}).then(contacts => response.json(contacts))
+    /*
+    Contact.find({}).then(result => {
+        result.forEach(contact => {
+            console.log(`${contact.name} ${contact.number}`)
+        })
+    })
+    */
 })
 
 app.get('/info', (request,response) => {
