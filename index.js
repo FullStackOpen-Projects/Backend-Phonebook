@@ -65,7 +65,7 @@ app.get('/api/contacts/:id', (request, response) => {
     }
 })
 
-app.delete('/api/contacts/:id', (request, response) => {
+app.delete('/api/contacts/:id', (request, response, next) => {
     const id = request.params.id
     Contact.findByIdAndRemove(id)
     .then(result => {
@@ -106,14 +106,6 @@ app.post('/api/contacts', (request,response) => {
 })
 
 app.use(errorHandler)
-
-/*
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
-app.use(morgan('tiny', {stream: accessLogStream}))
-app.get('/', (request, response) => {
-    response.send('Hello World')
-})
-*/
 
 const PORT = Number(process.env.PORT || 3001)
 app.listen(PORT, () => {
