@@ -5,6 +5,7 @@ const path = require('path')
 const cors = require('cors')
 const app = express()
 const Contact = require('./models/contact')
+const { notEqual } = require('assert')
 
 app.use(express.static('build'))
 app.use(cors())
@@ -70,6 +71,19 @@ app.delete('/api/contacts/:id', (request, response, next) => {
     Contact.findByIdAndRemove(id)
     .then(result => {
         response.status(204).end()
+    })
+    .catch(error => next(error))
+})
+
+app.put('/api/contacts/:id', (request, response, next) => {
+    const newContact = {
+        name: request.body.name,
+        number: request.body.number,
+    }
+
+    Contact.findByIdAndUpdate(request.params.id, newContact, {new: true})
+    .then(updatedNote => {
+        response.json(updatedNote)
     })
     .catch(error => next(error))
 })
