@@ -1,5 +1,6 @@
 require('dotenv').config()
 const mongoose = require('mongoose')
+var uniqueValidator = require('mongoose-unique-validator');
 const url = process.env.MONGODB_URI
 
 console.log('Connecting to', url)
@@ -13,10 +14,18 @@ mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true, useFindA
 })
 
 const contactSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+    name: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    number:{
+        type: String,
+        required: true,
+    },
     id: String
 })
+contactSchema.plugin(uniqueValidator)
 
 contactSchema.set('toJSON', {
     transform: (document, returnedObject) => {
