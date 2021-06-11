@@ -8,15 +8,6 @@ app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
 
-const errorHandler = (error, request, response, next) => {
-    if(error.name === 'CastError'){
-        response.status(400).send({error: 'Malformatted id'})
-    }
-    else if(error.name === 'ValidationError'){
-        response.status(400).json({error: error.message})
-    }
-}
-
 app.get('/api/contacts', (request, response) => {
     Contact.find({}).then(contacts => response.json(contacts))
 })
@@ -76,15 +67,6 @@ app.post('/api/contacts', (request,response, next) => {
     else if(!(request.body.name) && !(request.body.number)){
         return response.status(400).json({error: 'Name and number are missing'})
     }
-    else{
-        Contact.find({name: request.body.name})
-        .then(duplicate => {
-           if(duplicate){
-               return response.status(400).json({error: 'Name already exists'})
-           }
-        })
-        .catch(error => next(error))
-    }
 
     const id = crypto.randomBytes(16).toString("hex");
 
@@ -98,9 +80,17 @@ app.post('/api/contacts', (request,response, next) => {
     .then(savedContacts => {
         response.json(savedContacts)
     })
-    .catch(error => {})
+    .catch(error => next(error))
 })
 
+const errorHandler = (error, request, response, next) => {
+    if(error.name === 'CastError'){
+        response.status(400).send({error: 'Malformatted id'})
+    }
+    else if(error.name === 'ValidationError'){
+        response.status(400).json({error: error.message})
+    }
+}
 app.use(errorHandler)
 
 const PORT = Number(process.env.PORT || 3001)
