@@ -1,42 +1,19 @@
 const express = require('express')
 const crypto = require('crypto')
-const fs = require('fs')
-const path = require('path')
 const cors = require('cors')
 const app = express()
 const Contact = require('./models/contact')
-const { notEqual } = require('assert')
 
 app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
 
-let contacts = [
-    { 
-        "name": "Arto Hellas", 
-        "number": "040-123456",
-        "id": 1
-    },
-    { 
-        "name": "Ada Lovelace", 
-        "number": "39-44-5323523",
-        "id": 2
-    },
-    { 
-        "name": "Dan Abramov", 
-        "number": "12-43-234345",
-        "id": 3
-    },
-    { 
-        "name": "Mary Poppendieck", 
-        "number": "39-23-6423122",
-        "id": 4
-    }
-]
-
 const errorHandler = (error, request, response, next) => {
     if(error.name === 'CastError'){
         response.status(400).send({error: 'Malformatted id'})
+    }
+    else if(error.name === 'ValidationError'){
+        response.status(400).json({error: error.message})
     }
     next(error)
 }
@@ -55,15 +32,17 @@ app.get('/info', (request,response) => {
 })
 
 app.get('/api/contacts/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const contact = contacts.find(contact => contact.id === id)
-    
-    if(contact){
-        response.json(contact)
-    }
-    else{
-        response.status(404).end()
-    }
+    const id = request.params.id
+    Contact.findById(id)
+    .then(contact => {
+        if(contact){
+            response.json(contact)
+        }
+        else{
+            response.status(404).end()
+        }
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/contacts/:id', (request, response, next) => {
@@ -114,9 +93,11 @@ app.post('/api/contacts', (request,response) => {
         id: id
     })
 
-    newContact.save().then(savedContacts => {
+    newContact.save()
+    .then(savedContacts => {
         response.json(savedContacts)
     })
+    .catch(error => next(error))
 })
 
 app.use(errorHandler)
