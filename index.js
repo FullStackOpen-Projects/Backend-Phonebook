@@ -15,7 +15,6 @@ const errorHandler = (error, request, response, next) => {
     else if(error.name === 'ValidationError'){
         response.status(400).json({error: error.message})
     }
-    next(error)
 }
 
 app.get('/api/contacts', (request, response) => {
@@ -67,8 +66,7 @@ app.put('/api/contacts/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-
-app.post('/api/contacts', (request,response) => {
+app.post('/api/contacts', (request,response, next) => {
     if(!(request.body.name)){
         return response.status(400).json({error: 'Name is missing'})
     }
@@ -79,10 +77,13 @@ app.post('/api/contacts', (request,response) => {
         return response.status(400).json({error: 'Name and number are missing'})
     }
     else{
-        const duplicate = contacts.some(contact => contact.name === request.body.name)
-        if(duplicate){
-            return response.status(400).json({error: 'Name already exists '})
-        }
+        Contact.find({name: request.body.name})
+        .then(duplicate => {
+           if(duplicate){
+               return response.status(400).json({error: 'Name already exists'})
+           }
+        })
+        .catch(error => next(error))
     }
 
     const id = crypto.randomBytes(16).toString("hex");
@@ -97,7 +98,7 @@ app.post('/api/contacts', (request,response) => {
     .then(savedContacts => {
         response.json(savedContacts)
     })
-    .catch(error => next(error))
+    .catch(error => {})
 })
 
 app.use(errorHandler)
