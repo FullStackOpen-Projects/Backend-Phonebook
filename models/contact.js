@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 var uniqueValidator = require('mongoose-unique-validator');
 //const url = process.env.MONGODB_URI
 
-console.log('Connecting to', url)
+//console.log('Connecting to', url)
 
 mongoose.connect("mongodb+srv://Steven:StevenHans@cluster0.s52wk.mongodb.net/Phonebook?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true})
 .then(result => {
